@@ -33,7 +33,7 @@ foreach ($nic in $nics) {
     $vmName = $Matches.vmName
     foreach ($nicIP in $nic.IpConfigurations) {
         $Matches = $null
-        ## 서브넷을 먼저 찾아서 인덱스를 축소, 풀스캔 방지
+        ## 서브넷을 먼저 찾음
         $null = $nicIP.Subnet.Id -match "Microsoft.Network/virtualNetworks/[a-zA-Z0-9\-]{0,20}/subnets/(?<subnetName>.+)"
         ## 불러온 IP 목록 중 NIC의 IP와 같은 row에 데이터 저장
         $loadedSubnet = $ipTable | Where-Object {$_.subnet -eq $Matches.subnetName} | Where-Object {$_.ip -eq $nicIP.PrivateIpAddress}
@@ -52,7 +52,7 @@ foreach ($lb in $lbs) {
     $lbName = $lb.Name
     foreach ($lbfront in $lb.FrontendIpConfigurations) {
         $Matches = $null
-        ## 서브넷을 먼저 찾아서 인덱스를 축소, 풀스캔 방지
+        ## 서브넷을 먼저 찾음
         $null = $lbfront.Subnet.Id -match "Microsoft.Network/virtualNetworks/[a-zA-Z0-9\-]{0,20}/subnets/(?<subnetName>.+)"
         ## 불러온 IP 목록 중 LB의 IP와 같은 row에 데이터 저장
         $loadedSubnet = $ipTable | Where-Object {$_.subnet -eq $Matches.subnetName} | Where-Object {$_.ip -eq $lbfront.PrivateIpAddress}
